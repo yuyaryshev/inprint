@@ -31,6 +31,7 @@ console.log("any code can be here");
 ```javascript
 module.exports = {
     files:['src/**/*.{ts,tsx,js,jsx}'],
+    embeddedFeatures: false,    // Highly recommended if don't use them!
     inprint: function inprint(paramsObject) {
         return "    // " + JSON.stringify(paramsObject);
     }
@@ -91,7 +92,11 @@ require("inprint").run(options);
 
 This package also contains some functions which I use for my own project automation.
 
-The default option disables this, so if you don't need them, just don't bother.
+If you want to disable them use:
+
+```javascript
+embeddedFeatures: false,
+```
 
 If you want to use them add to options file:
 

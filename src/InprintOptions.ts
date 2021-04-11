@@ -12,5 +12,5 @@ export const defaultInprintOptions = {
     skipNodeModules: true,
     files: ["src/**/*.{ts,cts,mts,tsx,js,jsx,cjs,mjs}"],
     logging: "short",
-    embeddedFeatures: false,
+    embeddedFeatures: true,
 };
