@@ -29,11 +29,11 @@ console.log("any code can be here");
 2. Now add **inprint.cjs** (or **.js**) to your project with the following contents:
 
 ```javascript
-module.exports.inprint = {
-    files:['src/**/*.{ts,tsx,js,jsx}'],
-    inprint: function inprint(paramsObject) {
-        return "    // " + JSON.stringify(paramsObject);
-    }
+module.exports = {
+    files:['src/**/*.{ts,tsx,js,jsx}'],
+    inprint: function inprint(paramsObject) {
+        return "    // " + JSON.stringify(paramsObject);
+    }
 }
 ```
 
@@ -44,7 +44,7 @@ module.exports.inprint = {
 ```javascript
 console.log("any code can be here");
 // @INPRINT_START {my:"own params", json5:'is supported here!'}
-// {my:"own params", json5:'is supported here!'}
+    // {my:"own params", json5:'is supported here!'}
 // @INPRINT_END
 console.log("any code can be here");
 ```
