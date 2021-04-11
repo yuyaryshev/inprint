@@ -1,10 +1,14 @@
 # inprint
 
-A very simple precompiler on typescript.
+A very simple precompiler (written in typescript). With it you can make a dynamically generated blocks in your code.
 
 # Installation
 
-```
+```bash
+npm i inprint --save-dev
+yarn i inprint --save-dev
+pnpm i inprint --save-dev
+
 npm i -g inprint
 yarn i -g inprint
 pnpm i -g inprint
@@ -14,7 +18,7 @@ pnpm i -g inprint
 
 Anywhere in your code add a block you want to generate like this
 
-```
+```javascript
 console.log("any code can be here");
 // @INPRINT_START {my:"own params", json5:'is supported here!'}
 // Anything here will be overwritten by generated code!
@@ -24,7 +28,7 @@ console.log("any code can be here");
 
 Now add **inprint.cjs** (or **.js**) to your project with the following contents:
 
-```
+```javascript
 module.exports.inprint = {
     files:['src/**/*.{ts,tsx,js,jsx}'],
     inprint: function inprint(paramsObject) {
@@ -33,7 +37,7 @@ module.exports.inprint = {
 }
 ```
 
-The returned content will be inprinted inbetween @INPRINT tags
+The returned content will be inprinted between **@INPRINT** tags.
 
 inprint function will receive the following additional paramaters:
 

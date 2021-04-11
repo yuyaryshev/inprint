@@ -1,22 +1,30 @@
 {
     "name": "inprint",
     "version": "1.0.0",
-    "private": true,
-    "description": "A very simple precompiler on typescript",
+    "private": false,
+    "description": "A very simple precompiler written in typescript. With it you can make a dynamically generated blocks in your code.",
+    "keywords": ["generator","precompiler","inprint","inprinter"],
     "main": "index.js",
-    "sideEffects_DISABLED": [],
+    "bin": {
+        "inprint": "./index.js"
+    },
     "scripts": {
         "test": "jest",
-        "watch": "babel src --config-file ./babel.ts.config.js --out-dir ts_out/src --extensions \".ts,.tsx\" --source-maps inline -w",
+        "watch": "babel src --config-file ./babel.ts.config.js --out-dir lib --extensions \".ts,.tsx\" --source-maps inline -w",
         "ycplmon": "node ..\\ycplmon_amaglion\\ts_out\\src\\ycplmon.js src",
-        "tsc": "tsc"
+        "tsc": "tsc",
+        "start": "node bin/index.js"
     },
     "author": "Yuri Yaryshev",
     "license": "Unlicense",
-    "nyc": "^15.0.0",
+    "homepage": "https://github.com/yuyaryshev/inprint",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/yuyaryshev/inprint"
+    },
     "plainDependencies": true,
     "jest": {
-        "rootDir": "ts_out"
+        "rootDir": "lib"
     },
     "prettier": {
         "tabWidth": 4,
