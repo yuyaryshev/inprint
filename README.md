@@ -68,3 +68,19 @@ Options:
 # Limitations
 
 - **@INPRINT** tags can't be nested
+
+# Debugging inprint function
+
+Create **inprintDebug.cjs** with contents 
+
+```javascript
+require("inprint").run();
+```
+
+run it in your favorite IDE to debug the scripts.
+
+# Run programmatically
+
+```javascript
+require("inprint").run(options);
+```
