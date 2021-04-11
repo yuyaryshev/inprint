@@ -64,3 +64,7 @@ Options:
 - **files** - optional, globby input patterns, default is `['src/**/*.{ts,tsx,js,jsx}']`
 
 - **skipNodeModules**- optional, if true will skip all path containing /node_modules/, default is true
+
+# Limitations
+
+- **@INPRINT** tags can't be nested
