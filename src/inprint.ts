@@ -35,15 +35,11 @@ export const writeFileSyncIfChanged = (fileName: string, content: string) => {
     return false;
 };
 
-export function inprintFunction(params0: any) {
-    const { content, ...params } = params0;
-    return "    // " + JSON.stringify(params);
-}
-
 export interface InprintOptions {
     skipNodeModules: boolean;
     files: string | string[];
     logging: "short" | "files" | false;
+    inprint: (params: any) => string;
 }
 
 export const defaultInprintOptions = {
@@ -92,7 +88,7 @@ export function handleFile(filePath: string, options: InprintOptions): boolean {
 
     for (let part of parts) {
         try {
-            part.newMiddle = inprintFunction(part.params);
+            part.newMiddle = options.inprint(part.params);
         } catch (e) {
             part.newMiddle = `// INPRINT_FAILED because of exception:\n${e.message || "NO_ERROR_MESSAGE"}\\n${
                 e.stack || "NO_STACK_TRACE"
@@ -146,6 +142,11 @@ export function run(options0?: InprintOptions | undefined) {
         );
     } else {
         const options: InprintOptions = { ...defaultInprintOptions, ...options0 };
+        if (!options.inprint) {
+            console.error(`CODE00000012 INPRINT_ERROR no 'inprint' function specified!`);
+            return false;
+        }
+
         let processedCount = 0;
         (async () => {
             if (options.logging) console.log(`CODE00000005 INPRINT options from ${optionsPath}`);
