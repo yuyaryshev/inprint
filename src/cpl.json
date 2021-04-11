@@ -2,16 +2,36 @@
  {
   "cpl": 1,
   "filePath": "src\\inprint.ts",
-  "pos": 1267
+  "pos": 1901
  },
  {
   "cpl": 2,
   "filePath": "src\\inprint.ts",
-  "pos": 1877
+  "pos": 2583
  },
  {
   "cpl": 3,
   "filePath": "src\\inprint.ts",
-  "pos": 2683
+  "pos": 4040
+ },
+ {
+  "cpl": 4,
+  "filePath": "src\\inprint.ts",
+  "pos": 4339
+ },
+ {
+  "cpl": 5,
+  "filePath": "src\\inprint.ts",
+  "pos": 4547
+ },
+ {
+  "cpl": 6,
+  "filePath": "src\\inprint.ts",
+  "pos": 4778
+ },
+ {
+  "cpl": 7,
+  "filePath": "src\\inprint.ts",
+  "pos": 4895
  }
 ]

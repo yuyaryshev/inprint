@@ -110,46 +110,47 @@ export function handleFile(filePath: string, options: InprintOptions) {
 // const testFilePath = `D:\\b\\Mine\\GIT_Work\\yatasks_one_api\\src\\inprintTestFile.ts`;
 // handleFile(testFilePath);
 
-let options0: InprintOptions | undefined = undefined;
-let optionsPath = process.argv[2];
-try {
-    if (!options0) {
-        optionsPath = process.argv[2];
-        options0 = require(optionsPath);
-    }
-} catch (e) {}
-
-try {
-    if (!options0) {
-        optionsPath = resolve(process.cwd(), "inprint.cjs");
-        options0 = require(optionsPath);
-    }
-} catch (e) {}
-
-try {
-    if (!options0) {
-        optionsPath = resolve(process.cwd(), "inprint.js");
-        options0 = require(optionsPath);
-    }
-} catch (e) {}
-
-if (!options0) {
-    console.error(
-        `CODE00000000 INPRINT_ERROR Couldn't find options file. Create inprint.cjs or specify path to options in command line argument`
-    );
-} else {
-    const options: InprintOptions = { ...defaultInprintOptions, ...options0 };
-    (async () => {
-        if (options.logging) console.log(`CODE00000000 INPRINT options from ${optionsPath}`);
-        const paths = await globby(options.files);
-
-        for (let filePath of paths) {
-            if (options.logging === "files") console.log(`CODE00000000 INPRINT ${filePath}`);
-            if (filePath.includes("node_modules") && options.skipNodeModules) continue;
-            handleFile(filePath, options);
+export function run(options0?: InprintOptions | undefined) {
+    let optionsPath: string | undefined = undefined;
+    try {
+        if (!options0) {
+            optionsPath = process.argv[2];
+            options0 = require(optionsPath);
         }
-        if (options.logging) console.log(`CODE00000000 INPRINT finished, ${paths.length} - files`);
+    } catch (e) {}
 
-        //=> ['unicorn', 'rainbow']
-    })();
+    try {
+        if (!options0) {
+            optionsPath = resolve(process.cwd(), "inprint.cjs");
+            options0 = require(optionsPath);
+        }
+    } catch (e) {}
+
+    try {
+        if (!options0) {
+            optionsPath = resolve(process.cwd(), "inprint.js");
+            options0 = require(optionsPath);
+        }
+    } catch (e) {}
+
+    if (!options0) {
+        console.error(
+            `CODE00000004 INPRINT_ERROR Couldn't find options file. Create inprint.cjs or specify path to options in command line argument`
+        );
+    } else {
+        const options: InprintOptions = { ...defaultInprintOptions, ...options0 };
+        (async () => {
+            if (options.logging) console.log(`CODE00000005 INPRINT options from ${optionsPath}`);
+            const paths = await globby(options.files);
+
+            for (let filePath of paths) {
+                if (options.logging === "files") console.log(`CODE00000006 INPRINT ${filePath}`);
+                if (filePath.includes("node_modules") && options.skipNodeModules) continue;
+                handleFile(filePath, options);
+            }
+            if (options.logging) console.log(`CODE00000007 INPRINT finished, ${paths.length} - files`);
+
+            //=> ['unicorn', 'rainbow']
+        })();
+    }
 }
