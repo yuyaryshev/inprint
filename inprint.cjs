@@ -1,5 +1,6 @@
 module.exports = {
-    files: "inprintTestFile.ts",
+    files: ["inprintTestFile.ts", "src/**/*.ts"],
+    embeddedFeatures: "first",
     inprint: function inprint(params) {
         console.log(params);
     },

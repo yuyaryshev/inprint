@@ -65,6 +65,8 @@ Options:
 
 - **skipNodeModules**- optional, if true will skip all path containing /node_modules/, default is true
 
+- **embeddedFeatures** - 'first' | 'last' | false - used to automatically run embedded generation functions (see the list below), 'first' - to run them before your inprint code, 'last' - to run only if your code returned undefined, false - don't run them ever, default is **false**. 
+
 # Limitations
 
 - **@INPRINT** tags can't be nested
@@ -84,3 +86,52 @@ run it in your favorite IDE to debug the scripts.
 ```javascript
 require("inprint").run(options);
 ```
+
+# Embedded Features
+
+This package also contains some functions which I use for my own project automation.
+
+The default option disables this, so if you don't need them, just don't bother.
+
+If you want to use them add to options file:
+
+```javascript
+embeddedFeatures: 'first'
+```
+
+You can also call them with:
+
+```javascript
+require("inprint").callEmbeddedFeatures(params, options);
+```
+
+Using just one function is also possible, for example:
+
+```javascript
+require("inprint").inprintIndexTs(params, options);
+```
+
+List of embedded features:
+
+## IndexTs
+
+Generates reexports for each file in folder:
+
+```javascript
+// @INPRINT_START {exclude:[""], merge:[{name:"embeddedFeatures:EmbeddedFeature[]", suffix:"EmbeddedFeature"}]}
+export * from "./indexTs";
+
+import {indexTsEmbeddedFeature} from "./indexTs";
+export const embeddedFeatures:EmbeddedFeature[] = [indexTsEmbeddedFeature];
+// @INPRINT_END
+```
+
+###### Params:
+
+- **exclude** - array of excluded filenames
+
+- **merge** - array of merged variables, defined as objects
+  
+  - **suffix** - name of a const exported from each file
+  
+  - **name** - name of result variable

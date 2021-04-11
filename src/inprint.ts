@@ -2,6 +2,8 @@ import JSON5 from "json5";
 import globby from "globby";
 import { readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
+import { embeddedFeatures } from "./embeddedFeatures";
+import { defaultInprintOptions, InprintOptions } from "./InprintOptions";
 
 export const inprint_prefix = "@" + "INPRINT";
 export const startPrefix = "_START";
@@ -33,19 +35,6 @@ export const writeFileSyncIfChanged = (fileName: string, content: string) => {
         return true;
     }
     return false;
-};
-
-export interface InprintOptions {
-    skipNodeModules: boolean;
-    files: string | string[];
-    logging: "short" | "files" | false;
-    inprint: (params: any) => string;
-}
-
-export const defaultInprintOptions = {
-    skipNodeModules: true,
-    files: ["src/**/*.{ts,cts,mts,tsx,js,jsx,cjs,mjs}"],
-    logging: "short",
 };
 
 export function handleFile(filePath: string, options: InprintOptions): boolean {
@@ -88,7 +77,7 @@ export function handleFile(filePath: string, options: InprintOptions): boolean {
 
     for (let part of parts) {
         try {
-            part.newMiddle = options.inprint(part.params);
+            part.newMiddle = doInprint(part.params, options);
         } catch (e) {
             part.newMiddle = `// INPRINT_FAILED because of exception:\n${e.message || "NO_ERROR_MESSAGE"}\\n${
                 e.stack || "NO_STACK_TRACE"
@@ -102,6 +91,32 @@ export function handleFile(filePath: string, options: InprintOptions): boolean {
         fileHeader + inprint_prefix + parts.map((p) => `${p.header}\n${p.newMiddle}\n${p.tail}`).join(inprint_prefix);
     writeFileSyncIfChanged(filePath, newContent);
     return true;
+}
+
+export function callEmbeddedFeatures(params: any, options: InprintOptions): string | undefined {
+    for (let embeddedFeature of embeddedFeatures) {
+        const r = embeddedFeature.func(params, options);
+        if (r) return r;
+    }
+    return undefined;
+}
+
+export function doInprint(params: any, options: InprintOptions): string {
+    if (options.embeddedFeatures === "first" || options.embeddedFeatures === true) {
+        const r = callEmbeddedFeatures(params, options);
+        if (r) return r;
+    }
+
+    if (options.inprint) {
+        const r = options.inprint(params, options);
+        if (r) return r;
+    }
+
+    if (options.embeddedFeatures === "last") {
+        const r = callEmbeddedFeatures(params, options);
+        if (r) return r;
+    }
+    return `// INPRINT_ERROR None of inprint functions returned a result. They all returned undefined!`;
 }
 
 // const testFilePath = `D:\\b\\Mine\\GIT_Work\\yatasks_one_api\\src\\inprintTestFile.ts`;
@@ -144,7 +159,7 @@ export function run(options0?: InprintOptions | undefined) {
         const options: InprintOptions = { ...defaultInprintOptions, ...options0 };
         if (!options.inprint) {
             console.error(`CODE00000012 INPRINT_ERROR no 'inprint' function specified!`);
-            return false;
+            return;
         }
 
         let processedCount = 0;
