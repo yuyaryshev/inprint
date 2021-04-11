@@ -4,6 +4,7 @@ import { readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
 import { embeddedFeatures } from "./embeddedFeatures";
 import { defaultInprintOptions, InprintOptions } from "./InprintOptions";
+import { formatTypescript } from "./formatTypescript";
 
 export const inprint_prefix = "@" + "INPRINT";
 export const startPrefix = "_START";
@@ -77,7 +78,7 @@ export function handleFile(filePath: string, options: InprintOptions): boolean {
 
     for (let part of parts) {
         try {
-            part.newMiddle = doInprint(part.params, options);
+            part.newMiddle = formatTypescript(doInprint(part.params, options), options.prettierOpts);
         } catch (e) {
             part.newMiddle = `// INPRINT_FAILED because of exception:\n${e.message || "NO_ERROR_MESSAGE"}\\n${
                 e.stack || "NO_STACK_TRACE"
@@ -151,33 +152,22 @@ export function run(options0?: InprintOptions | undefined) {
         }
     } catch (e) {}
 
-    if (!options0) {
-        console.error(
-            `CODE00000004 INPRINT_ERROR Couldn't find options file. Create inprint.cjs or specify path to options in command line argument`
-        );
-    } else {
-        const options: InprintOptions = { ...defaultInprintOptions, ...options0 };
-        if (!options.inprint) {
-            console.error(`CODE00000012 INPRINT_ERROR no 'inprint' function specified!`);
-            return;
+    const options: InprintOptions = { ...defaultInprintOptions, ...options0 };
+    let processedCount = 0;
+    (async () => {
+        if (options.logging) console.log(`CODE00000005 INPRINT options from ${optionsPath}`);
+        const paths = await globby(options.files);
+
+        for (let filePath of paths) {
+            if (options.logging === "files") console.log(`CODE00000006 INPRINT ${filePath}`);
+            if (filePath.includes("node_modules") && options.skipNodeModules) continue;
+            if (handleFile(filePath, options)) processedCount++;
         }
-
-        let processedCount = 0;
-        (async () => {
-            if (options.logging) console.log(`CODE00000005 INPRINT options from ${optionsPath}`);
-            const paths = await globby(options.files);
-
-            for (let filePath of paths) {
-                if (options.logging === "files") console.log(`CODE00000006 INPRINT ${filePath}`);
-                if (filePath.includes("node_modules") && options.skipNodeModules) continue;
-                if (handleFile(filePath, options)) processedCount++;
-            }
-            if (options.logging)
-                console.log(
-                    `CODE00000007 INPRINT finished, ${paths.length} - total files, ${processedCount} - processed, ${
-                        paths.length - processedCount
-                    } - skipped`
-                );
-        })();
-    }
+        if (options.logging)
+            console.log(
+                `CODE00000007 INPRINT finished, ${paths.length} - total files, ${processedCount} - processed, ${
+                    paths.length - processedCount
+                } - skipped`
+            );
+    })();
 }

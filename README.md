@@ -68,6 +68,8 @@ Options:
 
 - **embeddedFeatures** - 'first' | 'last' | false - used to automatically run embedded generation functions (see the list below), 'first' - to run them before your inprint code, 'last' - to run only if your code returned undefined, false - don't run them ever, default is **false**. 
 
+- **prettierOpts** - optional, options forwarded to prettier.
+
 # Limitations
 
 - **@INPRINT** tags can't be nested

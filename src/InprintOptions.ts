@@ -4,13 +4,14 @@ export interface InprintOptions {
     skipNodeModules: boolean;
     files: string | string[];
     logging: "short" | "files" | false;
-    inprint: InprintHandler;
+    inprint?: InprintHandler | undefined;
     embeddedFeatures: "first" | true | "last" | false;
+    prettierOpts?:any;
 }
 
 export const defaultInprintOptions = {
     skipNodeModules: true,
     files: ["src/**/*.{ts,cts,mts,tsx,js,jsx,cjs,mjs}"],
-    logging: "short",
+    logging: "short" as const,
     embeddedFeatures: true,
 };
