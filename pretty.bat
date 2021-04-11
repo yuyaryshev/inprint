@@ -1,0 +1,1 @@
+cls && prettier --write "./src/**/*.*"
