@@ -16,7 +16,7 @@ pnpm i -g inprint
 
 # Usage
 
-Anywhere in your code add a block you want to generate like this
+1. Anywhere in your code add a block you want to generate like this
 
 ```javascript
 console.log("any code can be here");
@@ -26,7 +26,7 @@ console.log("any code can be here");
 console.log("any code can be here");
 ```
 
-Now add **inprint.cjs** (or **.js**) to your project with the following contents:
+2. Now add **inprint.cjs** (or **.js**) to your project with the following contents:
 
 ```javascript
 module.exports.inprint = {
@@ -37,7 +37,19 @@ module.exports.inprint = {
 }
 ```
 
-The returned content will be inprinted between **@INPRINT** tags.
+3. Run **inprint**
+
+4. The returned content will be inprinted between **@INPRINT** tags:
+
+```javascript
+console.log("any code can be here");
+// @INPRINT_START {my:"own params", json5:'is supported here!'}
+// {my:"own params", json5:'is supported here!'}
+// @INPRINT_END
+console.log("any code can be here");
+```
+
+# Details
 
 inprint function will receive the following additional paramaters:
 
