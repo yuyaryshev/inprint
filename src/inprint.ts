@@ -48,14 +48,14 @@ export interface InprintOptions {
 
 export const defaultInprintOptions = {
     skipNodeModules: true,
-    files: ["src/**/*.{ts,tsx,js,jsx}"],
+    files: ["src/**/*.{ts,cts,mts,tsx,js,jsx,cjs,mjs}"],
     logging: "short",
 };
 
-export function handleFile(filePath: string, options: InprintOptions) {
+export function handleFile(filePath: string, options: InprintOptions): boolean {
     const contentStr = readFileSync(filePath, "utf-8");
 
-    if (!contentStr.includes(inprint_prefix)) return;
+    if (!contentStr.includes(inprint_prefix)) return false;
 
     const [fileHeader, ...parts0] = contentStr.split(inprint_prefix);
     const parts: InprintFilePart[] = [];
@@ -63,7 +63,7 @@ export function handleFile(filePath: string, options: InprintOptions) {
         const s = parts0[i];
         if (!s.startsWith(startPrefix)) {
             console.error(`CODE00000001 INPRINT_ERROR No ${inprint_prefix}${startPrefix} in ${filePath}`);
-            return;
+            return false;
         }
 
         if (!parts0[i + 1].startsWith(endPrefix)) {
@@ -86,7 +86,7 @@ export function handleFile(filePath: string, options: InprintOptions) {
             parts.push({ header, params, middle, tail, newMiddle: "" });
         } catch (e) {
             console.error(`CODE00000003 INPRINT_ERROR ${e.message} in ${filePath}`);
-            return;
+            return false;
         }
     }
 
@@ -105,6 +105,7 @@ export function handleFile(filePath: string, options: InprintOptions) {
     const newContent =
         fileHeader + inprint_prefix + parts.map((p) => `${p.header}\n${p.newMiddle}\n${p.tail}`).join(inprint_prefix);
     writeFileSyncIfChanged(filePath, newContent);
+    return true;
 }
 
 // const testFilePath = `D:\\b\\Mine\\GIT_Work\\yatasks_one_api\\src\\inprintTestFile.ts`;
@@ -145,6 +146,7 @@ export function run(options0?: InprintOptions | undefined) {
         );
     } else {
         const options: InprintOptions = { ...defaultInprintOptions, ...options0 };
+        let processedCount = 0;
         (async () => {
             if (options.logging) console.log(`CODE00000005 INPRINT options from ${optionsPath}`);
             const paths = await globby(options.files);
@@ -152,11 +154,14 @@ export function run(options0?: InprintOptions | undefined) {
             for (let filePath of paths) {
                 if (options.logging === "files") console.log(`CODE00000006 INPRINT ${filePath}`);
                 if (filePath.includes("node_modules") && options.skipNodeModules) continue;
-                handleFile(filePath, options);
+                if (handleFile(filePath, options)) processedCount++;
             }
-            if (options.logging) console.log(`CODE00000007 INPRINT finished, ${paths.length} - files`);
-
-            //=> ['unicorn', 'rainbow']
+            if (options.logging)
+                console.log(
+                    `CODE00000007 INPRINT finished, ${paths.length} - total files, ${processedCount} - processed, ${
+                        paths.length - processedCount
+                    } - skipped`
+                );
         })();
     }
 }
