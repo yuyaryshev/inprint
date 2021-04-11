@@ -111,6 +111,12 @@ export function handleFile(filePath: string, options: InprintOptions) {
 // handleFile(testFilePath);
 
 export function run(options0?: InprintOptions | undefined) {
+    if (process.argv[2] === "--version" || process.argv[2] === "-v") {
+        // @ts-ignore
+        console.log(__VERSION__);
+        return;
+    }
+
     let optionsPath: string | undefined = undefined;
     try {
         if (!options0) {

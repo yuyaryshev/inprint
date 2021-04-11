@@ -1,4 +1,5 @@
 let fs = require("fs");
+let packageJson = eval("(()=>(" + fs.readFileSync("package.json", "utf-8") + "))()");
 let tsconf = eval("(()=>(" + fs.readFileSync("tsconfig.json", "utf-8") + "))()");
 
 let aliases = {};
@@ -52,5 +53,8 @@ module.exports = {
             },
         ],
         "@babel/transform-modules-commonjs",
+        ['inline-replace-variables', {
+            "__VERSION__": packageJson.version
+        }]
     ],
 };
