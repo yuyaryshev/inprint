@@ -131,26 +131,46 @@ export function run(options0?: InprintOptions | undefined) {
     }
 
     let optionsPath: string | undefined = undefined;
-    try {
-        if (!options0) {
-            optionsPath = process.argv[2];
-            options0 = require(optionsPath);
+    if (process.argv[2])
+        try {
+            if (!options0) {
+                optionsPath = process.argv[2];
+                options0 = require(optionsPath);
+            }
+        } catch (e) {
+            console.error(`CODE00000000 INPRINT failed to load '${optionsPath}' because of exception:`);
+            console.error(e);
+            process.exit(1);
+            return;
         }
-    } catch (e) {}
 
     try {
         if (!options0) {
             optionsPath = resolve(process.cwd(), "inprint.cjs");
             options0 = require(optionsPath);
         }
-    } catch (e) {}
+    } catch (e) {
+        if (e.code !== "MODULE_NOT_FOUND") {
+            console.error(`CODE00000000 INPRINT failed to load '${optionsPath}' because of exception:`);
+            console.error(e);
+            process.exit(1);
+            return;
+        }
+    }
 
     try {
         if (!options0) {
             optionsPath = resolve(process.cwd(), "inprint.js");
             options0 = require(optionsPath);
         }
-    } catch (e) {}
+    } catch (e) {
+        if (e.code !== "MODULE_NOT_FOUND") {
+            console.error(`CODE00000000 INPRINT failed to load '${optionsPath}' because of exception:`);
+            console.error(e);
+            process.exit(1);
+            return;
+        }
+    }
 
     const options: InprintOptions = { ...defaultInprintOptions, ...options0 };
     let processedCount = 0;
