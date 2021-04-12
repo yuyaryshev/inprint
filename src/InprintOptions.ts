@@ -7,6 +7,7 @@ export interface InprintOptions {
     inprint?: InprintHandler | undefined;
     embeddedFeatures: "first" | true | "last" | false;
     prettierOpts?:any;
+    forceProcessTermination?:boolean;
 }
 
 export const defaultInprintOptions = {

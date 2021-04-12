@@ -70,6 +70,8 @@ Options:
 
 - **prettierOpts** - optional, options forwarded to prettier.
 
+- **forceProcessTermination** - if defined will call process.exit(0) after finished. Useful in case you include some files with timers to do your generation and don't want or can't get rid of them
+
 # Limitations
 
 - **@INPRINT** tags can't be nested

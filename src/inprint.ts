@@ -189,5 +189,7 @@ export function run(options0?: InprintOptions | undefined) {
                     paths.length - processedCount
                 } - skipped`
             );
+        if(options.forceProcessTermination)
+            process.exit(0);
     })();
 }

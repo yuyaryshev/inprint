@@ -4,5 +4,6 @@ module.exports = {
     inprint: function inprint(params) {
         console.log(params);
     },
-    logging:'files',
+    logging: "files",
+    prettierOpts: { filepath: __dirname },
 };
