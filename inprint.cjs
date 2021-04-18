@@ -5,5 +5,5 @@ module.exports = {
         console.log(params);
     },
     logging: "files",
-    prettierOpts: { filepath: __dirname },
+    prettierOpts: { filepath: __dirname, ...JSON.parse(require("fs").readFileSync("package.json", "utf-8"))?.prettier, parser:"typescript" },
 };

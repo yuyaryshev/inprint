@@ -78,7 +78,7 @@ export function handleFile(filePath: string, options: InprintOptions): boolean {
 
     for (let part of parts) {
         try {
-            part.newMiddle = formatTypescript(doInprint(part.params, options), options.prettierOpts);
+            part.newMiddle = doInprint(part.params, options);
         } catch (e) {
             part.newMiddle = `// INPRINT_FAILED because of exception:\n${e.message || "NO_ERROR_MESSAGE"}\\n${
                 e.stack || "NO_STACK_TRACE"
@@ -88,8 +88,8 @@ export function handleFile(filePath: string, options: InprintOptions): boolean {
         }
     }
 
-    const newContent =
-        fileHeader + inprint_prefix + parts.map((p) => `${p.header}\n${p.newMiddle}\n${p.tail}`).join(inprint_prefix);
+    const newContent =formatTypescript(
+        fileHeader + inprint_prefix + parts.map((p) => `${p.header}\n${p.newMiddle}\n${p.tail}`).join(inprint_prefix), options.prettierOpts);
     writeFileSyncIfChanged(filePath, newContent);
     return true;
 }
@@ -138,7 +138,7 @@ export function run(options0?: InprintOptions | undefined) {
                 options0 = require(optionsPath);
             }
         } catch (e) {
-            console.error(`CODE00000000 INPRINT failed to load '${optionsPath}' because of exception:`);
+            console.error(`CODE00000004 INPRINT failed to load '${optionsPath}' because of exception:`);
             console.error(e);
             process.exit(1);
             return;
@@ -151,7 +151,7 @@ export function run(options0?: InprintOptions | undefined) {
         }
     } catch (e) {
         if (e.code !== "MODULE_NOT_FOUND") {
-            console.error(`CODE00000000 INPRINT failed to load '${optionsPath}' because of exception:`);
+            console.error(`CODE00000008 INPRINT failed to load '${optionsPath}' because of exception:`);
             console.error(e);
             process.exit(1);
             return;
@@ -165,7 +165,7 @@ export function run(options0?: InprintOptions | undefined) {
         }
     } catch (e) {
         if (e.code !== "MODULE_NOT_FOUND") {
-            console.error(`CODE00000000 INPRINT failed to load '${optionsPath}' because of exception:`);
+            console.error(`CODE00000009 INPRINT failed to load '${optionsPath}' because of exception:`);
             console.error(e);
             process.exit(1);
             return;

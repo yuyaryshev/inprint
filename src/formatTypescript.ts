@@ -5,13 +5,15 @@ try {
     formatjs = require("prettier");
 } catch (e) {}
 
-let format = formatjs ? formatjs.format : undefined;
-
 export const formatTypescript = (typescriptSourceCode: string, prettierOpts: any): string => {
-    if (!format) return typescriptSourceCode;
+    if (!formatjs.format) return typescriptSourceCode;
     try {
-        return format(typescriptSourceCode, prettierOpts);
+        // console.log(`formatTypescript started`);
+        const r = formatjs.format(typescriptSourceCode, prettierOpts);
+        // console.log(`formatTypescript finished successfully`);
+        return r;
     } catch (e) {
+        // console.warn(`formatTypescript failed`, e);
         return typescriptSourceCode;
     }
 };
