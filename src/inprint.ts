@@ -150,7 +150,7 @@ export function run(options0?: InprintOptions | undefined) {
             options0 = require(optionsPath);
         }
     } catch (e) {
-        if (e.code !== "MODULE_NOT_FOUND") {
+        if (e.code !== "MODULE_NOT_FOUND" || e.message.split("'")[1] !== optionsPath) {
             console.error(`CODE00000008 INPRINT failed to load '${optionsPath}' because of exception:`);
             console.error(e);
             process.exit(1);
@@ -164,13 +164,16 @@ export function run(options0?: InprintOptions | undefined) {
             options0 = require(optionsPath);
         }
     } catch (e) {
-        if (e.code !== "MODULE_NOT_FOUND") {
+        if (e.code !== "MODULE_NOT_FOUND" || e.message.split("'")[1] !== optionsPath) {
             console.error(`CODE00000009 INPRINT failed to load '${optionsPath}' because of exception:`);
             console.error(e);
             process.exit(1);
             return;
         }
     }
+
+    if (!options0)
+        optionsPath = "<default options>";
 
     const options: InprintOptions = { ...defaultInprintOptions, ...options0 };
     let processedCount = 0;
