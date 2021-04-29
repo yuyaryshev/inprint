@@ -5,7 +5,7 @@ import { EmbeddedFeature } from "../EmbeddedFeature";
 // export const embeddedFeatures:EmbeddedFeature[] = [indexTsEmbeddedFeature];
 
 // @INPRINT_START {exclude:[""], merge:[{name:"embeddedFeatures:EmbeddedFeature[]", suffix:"EmbeddedFeature"}]}
-export * from "./indexTs";
+export * from "./indexTs.js";
 
 import { indexTsEmbeddedFeature } from "./indexTs";
 export const embeddedFeatures: EmbeddedFeature[] = [indexTsEmbeddedFeature];
