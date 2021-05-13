@@ -25,7 +25,9 @@ export function inprintIndexTs(paramsObject: any, options: InprintOptions) {
     const baseParts = paramsObject.absolutePath.split("/").slice(0, -1).join("/");
 
     const fileNames = [];
-    for (let fileName of readdirSync(baseParts)) {
+    for (let dirent of readdirSync(baseParts, {withFileTypes :true})) {
+        if(dirent.isDirectory()) continue;
+        const fileName = dirent.name;
         const nameWoExt = fileName.split(".").slice(0, -1).join(".");
         if (!paramsObject.includeTests && nameWoExt.endsWith(".test")) continue;
         if (excludes.has(fileName) || excludes.has(nameWoExt)) continue;
