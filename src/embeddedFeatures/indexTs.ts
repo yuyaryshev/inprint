@@ -1,4 +1,5 @@
 import { readdirSync } from "fs";
+import { resolve } from "path";
 import { EmbeddedFeature } from "../EmbeddedFeature";
 import { InprintOptions } from "../InprintOptions";
 
@@ -22,7 +23,7 @@ export function inprintIndexTs(paramsObject: any, options: InprintOptions) {
     const merges = [...new Set([...(paramsObject?.merge || [])])];
 
     excludes.add("index");
-    const baseParts = paramsObject.absolutePath.split("/").slice(0, -1).join("/");
+    const baseParts = resolve(paramsObject.absolutePath.split("/").slice(0, -1).join("/"));
 
     const fileNames = [];
     for (let dirent of readdirSync(baseParts, {withFileTypes :true})) {
@@ -55,9 +56,14 @@ export const ${mergeDefinition.name} = [${mergeVars.join(", ")}];
         );
     }
 
-    return `
+    const r = `
 ${reexports}
 
 ${mergeArrayBlocks.join("\n\n")}
 `.trim();
+
+    if(!r.length)
+        return `export const unused901723 = 0; // No files found!`;
+
+    return r;
 }

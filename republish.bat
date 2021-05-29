@@ -1,1 +1,1 @@
-npm run build && npm publish && npm uninstall -g inprint && npm install -g inprint && inprint
+npm run republish

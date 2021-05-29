@@ -1,6 +1,6 @@
 {
     "name": "inprint",
-    "version": "1.2.8",
+    "version": "1.2.10",
     "private": false,
     "description": "A very simple precompiler written in typescript. With it you can make a dynamically generated blocks in your code.",
     "keywords": [
@@ -27,7 +27,8 @@
         "build": "babel src --config-file ./babel.ts.config.js --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
         "ycplmon": "node ..\\ycplmon_amaglion\\ts_out\\src\\ycplmon.js src",
         "tsc": "tsc",
-        "start": "node bin/index.js"
+        "start": "node bin/index.js",
+        "republish": "npm run build && npx version-select && npx genversion --es6 --semi version.js && npm publish && npm uninstall -g inprint && npm install -g inprint && inprint"
     },
     "author": "Yuri Yaryshev",
     "license": "Unlicense",
