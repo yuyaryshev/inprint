@@ -1,6 +1,6 @@
 {
     "name": "inprint",
-    "version": "1.2.10",
+    "version": "1.2.11",
     "private": false,
     "description": "A very simple precompiler written in typescript. With it you can make a dynamically generated blocks in your code.",
     "keywords": [
@@ -39,7 +39,7 @@
     },
     "plainDependencies": true,
     "jest": {
-        "rootDir": "lib"
+        "rootDir": "lib/cjs"
     },
     "prettier": {
         "tabWidth": 4,

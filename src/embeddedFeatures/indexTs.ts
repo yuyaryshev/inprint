@@ -11,6 +11,8 @@ Use merge:[{name:'MERGE_NAME', suffix:'MERGE_SUFFIX'}] to merge exported consts 
     func: inprintIndexTs,
 };
 
+const allowedExtensions = new Set(["js", "mjs", "cjs", "jsx", "ts", "tsx"]);
+
 export function inprintIndexTs(paramsObject: any, options: InprintOptions) {
     if (!paramsObject.absolutePath.endsWith("/index.ts")) return undefined;
 
@@ -26,9 +28,12 @@ export function inprintIndexTs(paramsObject: any, options: InprintOptions) {
     const baseParts = resolve(paramsObject.absolutePath.split("/").slice(0, -1).join("/"));
 
     const fileNames = [];
-    for (let dirent of readdirSync(baseParts, {withFileTypes :true})) {
-        if(dirent.isDirectory()) continue;
+    for (let dirent of readdirSync(baseParts, { withFileTypes: true })) {
+        if (dirent.isDirectory()) continue;
         const fileName = dirent.name;
+        const temp = fileName.split(".");
+        const ext = temp[temp.length - 1];
+        if (!allowedExtensions.has(ext)) continue;
         const nameWoExt = fileName.split(".").slice(0, -1).join(".");
         if (!paramsObject.includeTests && nameWoExt.endsWith(".test")) continue;
         if (excludes.has(fileName) || excludes.has(nameWoExt)) continue;
@@ -62,8 +67,7 @@ ${reexports}
 ${mergeArrayBlocks.join("\n\n")}
 `.trim();
 
-    if(!r.length)
-        return `export const unused901723 = 0; // No files found!`;
+    if (!r.length) return `export const unused901723 = 0; // No files found!`;
 
     return r;
 }
