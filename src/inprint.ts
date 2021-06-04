@@ -5,6 +5,7 @@ import { resolve } from "path";
 import { embeddedFeatures } from "./embeddedFeatures";
 import { defaultInprintOptions, InprintOptions } from "./InprintOptions";
 import { formatTypescript } from "./formatTypescript";
+import { EmbeddedFeature } from "./EmbeddedFeature";
 
 export const inprint_prefix = "@" + "INPRINT";
 export const startPrefix = "_START";
@@ -88,8 +89,10 @@ export function handleFile(filePath: string, options: InprintOptions): boolean {
         }
     }
 
-    const newContent =formatTypescript(
-        fileHeader + inprint_prefix + parts.map((p) => `${p.header}\n${p.newMiddle}\n${p.tail}`).join(inprint_prefix), options.prettierOpts);
+    const newContent = formatTypescript(
+        fileHeader + inprint_prefix + parts.map((p) => `${p.header}\n${p.newMiddle}\n${p.tail}`).join(inprint_prefix),
+        options.prettierOpts
+    );
     writeFileSyncIfChanged(filePath, newContent);
     return true;
 }
@@ -120,6 +123,17 @@ export function doInprint(params: any, options: InprintOptions): string {
     return `// INPRINT_ERROR None of inprint functions returned a result. They all returned undefined!`;
 }
 
+export function expectFeature(query0: string): EmbeddedFeature {
+    const query = query0.toLowerCase();
+    for (let feature of embeddedFeatures) if (feature.name.toLowerCase() === query) return feature;
+    for (let feature of embeddedFeatures)
+        for (let keyword of feature.keywords) if (keyword.toLowerCase() === query) return feature;
+    for (let feature of embeddedFeatures) if (feature.name.toLowerCase().includes(query)) return feature;
+    for (let feature of embeddedFeatures)
+        for (let keyword of feature.keywords) if (keyword.toLowerCase().includes(query)) return feature;
+    throw new Error(`CODE00000000 No feature has ${query0} in name or keywords`);
+}
+
 // const testFilePath = `D:\\b\\Mine\\GIT_Work\\yatasks_one_api\\src\\inprintTestFile.ts`;
 // handleFile(testFilePath);
 
@@ -127,6 +141,19 @@ export function run(options0?: InprintOptions | undefined) {
     if (process.argv[2] === "--version" || process.argv[2] === "-v") {
         // @ts-ignore
         console.log(__VERSION__);
+        return;
+    } else if (process.argv[2] === "--help" || process.argv[2] === "-h" || process.argv[2] === "-help") {
+        const featureQuery = process.argv[3]?.trim() || "";
+        if (featureQuery.length) {
+            const feature = expectFeature(featureQuery);
+            console.log(`${feature.name} usage help:\n`,feature.help);
+        } else
+            console.log(`
+Usage:
+inprint                     - Replaces all @INPRINT_START - @INPRINT_END blocks using functions specified in inprint.cjs
+inprint [--help [feature]]  - prints help for specifiec 'feature'. 'feature' can be part of feature name or part of feature keyword
+`);
+
         return;
     }
 
@@ -172,8 +199,7 @@ export function run(options0?: InprintOptions | undefined) {
         }
     }
 
-    if (!options0)
-        optionsPath = "<default options>";
+    if (!options0) optionsPath = "<default options>";
 
     const options: InprintOptions = { ...defaultInprintOptions, ...options0 };
     let processedCount = 0;
@@ -192,7 +218,6 @@ export function run(options0?: InprintOptions | undefined) {
                     paths.length - processedCount
                 } - skipped`
             );
-        if(options.forceProcessTermination)
-            process.exit(0);
+        if (options.forceProcessTermination) process.exit(0);
     })();
 }

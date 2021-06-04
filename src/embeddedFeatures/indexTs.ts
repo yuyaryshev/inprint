@@ -5,10 +5,18 @@ import { InprintOptions } from "../InprintOptions";
 
 export const indexTsEmbeddedFeature: EmbeddedFeature = {
     name: "IndexTs",
+    keywords: ["index"],
     description: `Generates reexport for each file inside directory. 
 Use exclude:['name1','name2'] to exclude some files. 
 Use merge:[{name:'MERGE_NAME', suffix:'MERGE_SUFFIX'}] to merge exported consts with specified MERGE_SUFFIX as an array into one variable MERGE_NAME`,
     func: inprintIndexTs,
+    help: `// ${"@INPRINT"}_START {exclude:[""], merge:[{name:"embeddedFeatures:EmbeddedFeature[]", suffix:"EmbeddedFeature"}]}
+export * from "./indexTs.js";
+
+import { indexTsEmbeddedFeature } from "./indexTs";
+export const embeddedFeatures: EmbeddedFeature[] = [indexTsEmbeddedFeature];
+// ${"@INPRINT"}_END
+    `,
 };
 
 const allowedExtensions = new Set(["js", "mjs", "cjs", "jsx", "ts", "tsx"]);
