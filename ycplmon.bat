@@ -1,1 +1,0 @@
-cls && npm run ycplmon
