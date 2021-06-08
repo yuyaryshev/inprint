@@ -2,10 +2,11 @@ import JSON5 from "json5";
 import globby from "globby";
 import { readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
-import { embeddedFeatures } from "./embeddedFeatures";
-import { defaultInprintOptions, InprintOptions } from "./InprintOptions";
-import { formatTypescript } from "./formatTypescript";
-import { EmbeddedFeature } from "./EmbeddedFeature";
+import { embeddedFeatures } from "./embeddedFeatures/index.js";
+import { defaultInprintOptions, InprintOptions } from "./InprintOptions.js";
+import { formatTypescript } from "./formatTypescript.js";
+import { EmbeddedFeature } from "./EmbeddedFeature.js";
+import { version } from "./projmeta.js";
 
 export const inprint_prefix = "@" + "INPRINT";
 export const startPrefix = "_START";
@@ -77,7 +78,7 @@ export function handleFile(filePath: string, options: InprintOptions): boolean {
         }
     }
 
-    for (let part of parts) {
+    for (const part of parts) {
         try {
             part.newMiddle = doInprint(part.params, options);
         } catch (e) {
@@ -98,7 +99,7 @@ export function handleFile(filePath: string, options: InprintOptions): boolean {
 }
 
 export function callEmbeddedFeatures(params: any, options: InprintOptions): string | undefined {
-    for (let embeddedFeature of embeddedFeatures) {
+    for (const embeddedFeature of embeddedFeatures) {
         const r = embeddedFeature.func(params, options);
         if (r) return r;
     }
@@ -125,13 +126,13 @@ export function doInprint(params: any, options: InprintOptions): string {
 
 export function expectFeature(query0: string): EmbeddedFeature {
     const query = query0.toLowerCase();
-    for (let feature of embeddedFeatures) if (feature.name.toLowerCase() === query) return feature;
-    for (let feature of embeddedFeatures)
-        for (let keyword of feature.keywords) if (keyword.toLowerCase() === query) return feature;
-    for (let feature of embeddedFeatures) if (feature.name.toLowerCase().includes(query)) return feature;
-    for (let feature of embeddedFeatures)
-        for (let keyword of feature.keywords) if (keyword.toLowerCase().includes(query)) return feature;
-    throw new Error(`CODE00000000 No feature has ${query0} in name or keywords`);
+    for (const feature of embeddedFeatures) if (feature.name.toLowerCase() === query) return feature;
+    for (const feature of embeddedFeatures)
+        for (const keyword of feature.keywords) if (keyword.toLowerCase() === query) return feature;
+    for (const feature of embeddedFeatures) if (feature.name.toLowerCase().includes(query)) return feature;
+    for (const feature of embeddedFeatures)
+        for (const keyword of feature.keywords) if (keyword.toLowerCase().includes(query)) return feature;
+    throw new Error(`CODE00000010 No feature has ${query0} in name or keywords`);
 }
 
 // const testFilePath = `D:\\b\\Mine\\GIT_Work\\yatasks_one_api\\src\\inprintTestFile.ts`;
@@ -140,17 +141,17 @@ export function expectFeature(query0: string): EmbeddedFeature {
 export function run(options0?: InprintOptions | undefined) {
     if (process.argv[2] === "--version" || process.argv[2] === "-v") {
         // @ts-ignore
-        console.log(__VERSION__);
+        console.log(version);
         return;
     } else if (process.argv[2] === "--help" || process.argv[2] === "-h" || process.argv[2] === "-help") {
         const featureQuery = process.argv[3]?.trim() || "";
         if (featureQuery.length) {
             const feature = expectFeature(featureQuery);
-            console.log(`${feature.name} usage help:\n`,feature.help);
+            console.log(`${feature.name} usage help:\n`, feature.help);
         } else
             console.log(`
 Usage:
-inprint                     - Replaces all @INPRINT_START - @INPRINT_END blocks using functions specified in inprint.cjs
+inprint                     - Replaces all ${"@"}INPRINT_START - ${"@"}INPRINT_END blocks using functions specified in inprint.cjs
 inprint [--help [feature]]  - prints help for specifiec 'feature'. 'feature' can be part of feature name or part of feature keyword
 `);
 
@@ -207,7 +208,7 @@ inprint [--help [feature]]  - prints help for specifiec 'feature'. 'feature' can
         if (options.logging) console.log(`CODE00000005 INPRINT options from ${optionsPath}`);
         const paths = await globby(options.files);
 
-        for (let filePath of paths) {
+        for (const filePath of paths) {
             if (options.logging === "files") console.log(`CODE00000006 INPRINT ${filePath}`);
             if (filePath.includes("node_modules") && options.skipNodeModules) continue;
             if (handleFile(filePath, options)) processedCount++;

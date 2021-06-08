@@ -1,6 +1,6 @@
 {
     "name": "inprint",
-    "version": "1.2.12",
+    "version": "1.2.13",
     "keywords": [
         "generator",
         "precompiler",
@@ -35,9 +35,9 @@
     },
     "scripts": {
         "test": "jest --passWithNoTests",
-        "build": "npm run precompile_full && npm run clean:all && npm run build:esm && npm run build:cjs && npm run build:types && npm run lint && npm run test && npm run build:docs",
+        "build": "npm run precompile_full && npm run clean && npm run build:esm && npm run build:cjs && npm run build:types && npm run lint && npm run test && npm run build:docs",
         "tsc": "npm run build:ts",
-        "republish": "npm run build && npx version-select && npx genversion --es6 --semi version.js && npm publish",
+        "republish": "npm run build && npx version-select && yb genprojmeta && npm publish",
         "precompile": "inprint && ycplmon2 fix src && eslint src --fix --quiet",
         "precompile_full": "npm run precompile && prettier src --write",
         "clean:cjs": "yb clean_cjs",
@@ -51,13 +51,13 @@
         "watch:types": "npm run clean:types && tsc -p tsconfig-declarations.json -w",
         "clear:docs": "rm -rf docs/*",
         "build:docs": "api-extractor run --local && api-documenter markdown --input-folder temp --output-folder docs",
-        "clean:all": "rm -rf dist/* && yb clean_all && npm run clear:docs",
         "clean:ts": "yb clean_ts",
         "build:ts": "npm run clean:ts && tsc",
         "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
         "deps": "echo Finding loops in .js requires... & del deps.png & madge dist -c -i deps.png && deps.png",
         "deps_all": "echo Generating full .js requires tree... & del deps.png & madge dist -i deps.png && deps.png",
-        "deps_orphans": "echo Finding orphans .js requires... & del deps.png & madge dist --orphans -i deps.png && deps.png"
+        "deps_orphans": "echo Finding orphans .js requires... & del deps.png & madge dist --orphans -i deps.png && deps.png",
+        "clean": "rm -rf dist/* && yb clean_all && npm run clear:docs"
     },
     "devDependencies": {
         "@babel/cli": "7.14.3",

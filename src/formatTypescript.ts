@@ -9,9 +9,7 @@ export const formatTypescript = (typescriptSourceCode: string, prettierOpts: any
     if (!formatjs.format) return typescriptSourceCode;
     try {
         // console.log(`formatTypescript started`);
-        const r = formatjs.format(typescriptSourceCode, prettierOpts);
-        // console.log(`formatTypescript finished successfully`);
-        return r;
+        return formatjs.format(typescriptSourceCode, prettierOpts);
     } catch (e) {
         // console.warn(`formatTypescript failed`, e);
         return typescriptSourceCode;

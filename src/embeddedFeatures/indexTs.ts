@@ -1,7 +1,7 @@
 import { readdirSync } from "fs";
 import { resolve } from "path";
-import { EmbeddedFeature } from "../EmbeddedFeature";
-import { InprintOptions } from "../InprintOptions";
+import { EmbeddedFeature } from "../EmbeddedFeature.js";
+import { InprintOptions } from "../InprintOptions.js";
 
 export const indexTsEmbeddedFeature: EmbeddedFeature = {
     name: "IndexTs",
@@ -10,12 +10,12 @@ export const indexTsEmbeddedFeature: EmbeddedFeature = {
 Use exclude:['name1','name2'] to exclude some files. 
 Use merge:[{name:'MERGE_NAME', suffix:'MERGE_SUFFIX'}] to merge exported consts with specified MERGE_SUFFIX as an array into one variable MERGE_NAME`,
     func: inprintIndexTs,
-    help: `// ${"@INPRINT"}_START {exclude:[""], merge:[{name:"embeddedFeatures:EmbeddedFeature[]", suffix:"EmbeddedFeature"}]}
+    help: `// ${"@"}INPRINT_START {exclude:[""], merge:[{name:"embeddedFeatures:EmbeddedFeature[]", suffix:"EmbeddedFeature"}]}
 export * from "./indexTs.js";
 
-import { indexTsEmbeddedFeature } from "./indexTs";
+import { indexTsEmbeddedFeature } from "./indexTs.js";
 export const embeddedFeatures: EmbeddedFeature[] = [indexTsEmbeddedFeature];
-// ${"@INPRINT"}_END
+// ${"@"}INPRINT_END
     `,
 };
 
@@ -36,7 +36,7 @@ export function inprintIndexTs(paramsObject: any, options: InprintOptions) {
     const baseParts = resolve(paramsObject.absolutePath.split("/").slice(0, -1).join("/"));
 
     const fileNames = [];
-    for (let dirent of readdirSync(baseParts, { withFileTypes: true })) {
+    for (const dirent of readdirSync(baseParts, { withFileTypes: true })) {
         if (dirent.isDirectory()) continue;
         const fileName = dirent.name;
         const temp = fileName.split(".");
@@ -54,11 +54,11 @@ export function inprintIndexTs(paramsObject: any, options: InprintOptions) {
         .join("\n");
 
     const mergeArrayBlocks = [];
-    for (let mergeDefinition of merges) {
+    for (const mergeDefinition of merges) {
         const mergeLines = [];
         const mergeVars = [];
-        for (let nameWoExt of fileNames) {
-            mergeLines.push(`import {${nameWoExt}${mergeDefinition.suffix}} from "./${nameWoExt}";`);
+        for (const nameWoExt of fileNames) {
+            mergeLines.push(`import {${nameWoExt}${mergeDefinition.suffix}} from "./${nameWoExt}.js";`);
             mergeVars.push(`${nameWoExt}${mergeDefinition.suffix}`);
         }
         mergeArrayBlocks.push(
