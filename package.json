@@ -49,7 +49,7 @@
         "clean:types": "yb clean_types",
         "build:types": "npm run clean:types && tsc -p tsconfig-declarations.json",
         "watch:types": "npm run clean:types && tsc -p tsconfig-declarations.json -w",
-        "clear:docs": "rm -rf docs/*",
+        "clear:docs": "yb clean_docs",
         "build:docs": "api-extractor run --local && api-documenter markdown --input-folder temp --output-folder docs",
         "clean:ts": "yb clean_ts",
         "build:ts": "npm run clean:ts && tsc",
@@ -57,7 +57,7 @@
         "deps": "echo Finding loops in .js requires... & del deps.png & madge dist -c -i deps.png && deps.png",
         "deps_all": "echo Generating full .js requires tree... & del deps.png & madge dist -i deps.png && deps.png",
         "deps_orphans": "echo Finding orphans .js requires... & del deps.png & madge dist --orphans -i deps.png && deps.png",
-        "clean": "rm -rf dist/* && yb clean_all && npm run clear:docs"
+        "clean": "yb clean_all && npm run clear:docs"
     },
     "devDependencies": {
         "@babel/cli": "7.14.3",
