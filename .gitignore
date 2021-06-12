@@ -110,9 +110,20 @@ node_modules
 private.json
 private.js
 private.cjs
+private.mjs
+private.ts
+
 settings.json
 settings.js
 settings.cjs
+
+
+
+settings.mjs
+
+
+
+settings.ts
 
 
 
@@ -126,4 +137,5 @@ distCompiled
 /src/AppIDE/server/domains_gen
 /src/AppIDE/server/domains_gen
 *.parser_log
+
 
