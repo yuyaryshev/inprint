@@ -60,7 +60,8 @@
         "clean": "yb clean_all && npm run clear:docs",
         "watch:test:cjs": "npm run build:cjs && jest --config=jest.config-cjs.cjs --passWithNoTests -w",
         "test:cjs": "npm run build:cjs && jest --config=jest.config-cjs.cjs --passWithNoTests",
-        "test:ts": "jest --config=jest.config-ts.cjs --passWithNoTests"
+        "test:ts": "jest --config=jest.config-ts.cjs --passWithNoTests",
+        "start": "node lib/cjs/start.js"
     },
     "devDependencies": {
         "@babel/cli": "7.14.3",
@@ -100,7 +101,8 @@
         "json5": "^2.2.0",
         "pretty-quick": "^3.1.0",
         "tslib": "^2.2.0",
-        "cross-env": "^7.0.3"
+        "cross-env": "^7.0.3",
+        "modify-filepath": "^0.0.2"
     },
     "peerDependencies": {
         "prettier": "2.2.1"
