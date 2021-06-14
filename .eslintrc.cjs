@@ -38,6 +38,8 @@ module.exports = {
         "@typescript-eslint/ban-types": 0,
         "jsdoc/require-jsdoc": excludeDocs ? 0 : nonImportantError,
         "jsdoc/require-description": excludeDocs ? 0 : nonImportantError,
+        "prefer-const": 0,
+
         "tsdoc/syntax": 1,
         // "require-jsdoc": ["error", {
         //     "require": {
@@ -48,12 +50,12 @@ module.exports = {
         //         "FunctionExpression": false
         //     }
         // }],
-        "sonarjs/no-redundant-jump": 1,
         "sonarjs/cognitive-complexity": 0,
         "sonarjs/no-redundant-jump": 0,
         "sonarjs/no-small-switch": 0,
         "sonarjs/no-unused-collection": nonImportantError,
-        "sonarjs/no-collapsible-if":0,
+        "sonarjs/no-collapsible-if": 0,
+        "sonarjs/prefer-immediate-return": 0,
         "no-debugger": keepDebug ? 0 : nonImportantError,
         "@typescript-eslint/no-non-null-asserted-optional-chain": 0,
         "sonarjs/no-one-iteration-loop": 0,
