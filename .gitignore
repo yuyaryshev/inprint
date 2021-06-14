@@ -139,3 +139,4 @@ distCompiled
 *.parser_log
 
 
+/.idea/workspace.xml
