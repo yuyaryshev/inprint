@@ -138,7 +138,7 @@ export function expectFeature(query0: string): EmbeddedFeature {
 // const testFilePath = `D:\\b\\Mine\\GIT_Work\\yatasks_one_api\\src\\inprintTestFile.ts`;
 // handleFile(testFilePath);
 
-export function run(options0?: InprintOptions | undefined) {
+export function inprint(options0?: InprintOptions | undefined) {
     if (process.argv[2] === "--version" || process.argv[2] === "-v") {
         // @ts-ignore
         console.log(version);
