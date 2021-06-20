@@ -1,3 +1,3 @@
 #!/usr/bin/env node
 
-require("../lib/cjs/index.js").run();
+require("../lib/cjs/index.js").inprintRunFromCmd();

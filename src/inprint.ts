@@ -138,7 +138,7 @@ export function expectFeature(query0: string): EmbeddedFeature {
 // const testFilePath = `D:\\b\\Mine\\GIT_Work\\yatasks_one_api\\src\\inprintTestFile.ts`;
 // handleFile(testFilePath);
 
-export function inprint(options0?: InprintOptions | undefined) {
+export function inprintRunFromCmd(options0?: InprintOptions | undefined) {
     if (process.argv[2] === "--version" || process.argv[2] === "-v") {
         // @ts-ignore
         console.log(version);
@@ -201,24 +201,27 @@ inprint [--help [feature]]  - prints help for specifiec 'feature'. 'feature' can
     }
 
     if (!options0) optionsPath = "<default options>";
+    if (options0?.logging) console.log(`CODE00000005 INPRINT options from ${optionsPath}`);
 
+    inprint(options0).then();
+}
+
+export async function inprint(options0?: InprintOptions | undefined) {
     const options: InprintOptions = { ...defaultInprintOptions, ...options0 };
     let processedCount = 0;
-    (async () => {
-        if (options.logging) console.log(`CODE00000005 INPRINT options from ${optionsPath}`);
-        const paths = await globby(options.files);
+    const paths = await globby(options.files);
 
-        for (const filePath of paths) {
-            if (options.logging === "files") console.log(`CODE00000006 INPRINT ${filePath}`);
-            if (filePath.includes("node_modules") && options.skipNodeModules) continue;
-            if (handleFile(filePath, options)) processedCount++;
-        }
-        if (options.logging)
-            console.log(
-                `CODE00000007 INPRINT finished, ${paths.length} - total files, ${processedCount} - processed, ${
-                    paths.length - processedCount
-                } - skipped`
-            );
-        if (options.forceProcessTermination) process.exit(0);
-    })();
+    for (const filePath of paths) {
+        if (options.logging === "files") console.log(`CODE00000006 INPRINT ${filePath}`);
+        if (filePath.includes("node_modules") && options.skipNodeModules) continue;
+        if (handleFile(filePath, options)) processedCount++;
+    }
+
+    if (options.logging)
+        console.log(
+            `CODE00000007 INPRINT finished, ${paths.length} - total files, ${processedCount} - processed, ${
+                paths.length - processedCount
+            } - skipped`
+        );
+    if (options.forceProcessTermination) process.exit(0);
 }
