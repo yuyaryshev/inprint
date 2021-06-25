@@ -31,7 +31,6 @@ specifiers:
   eslint-plugin-sonarjs: ^0.7.0
   eslint-plugin-tsdoc: ^0.2.14
   globby: ^11.0.4
-  inprint: D:\b\Mine\GIT_Work\inprint
   javascript-stringify: ^2.1.0
   jest: ^27.0.4
   jest-ts-webcompat-resolver: ^1.0.0
@@ -44,6 +43,7 @@ specifiers:
   ts-jest: ^27.0.3
   tslib: ^2.3.0
   typescript: ^4.3.4
+  yyabuilder: D:\b\Mine\GIT_Work\yyabuilder
 
 dependencies:
   globby: 11.0.4
@@ -79,7 +79,6 @@ devDependencies:
   eslint-plugin-jsdoc: 35.3.2_eslint@7.29.0
   eslint-plugin-sonarjs: 0.7.0_eslint@7.29.0
   eslint-plugin-tsdoc: 0.2.14
-  inprint: 'link:'
   javascript-stringify: 2.1.0
   jest: 27.0.4
   jest-ts-webcompat-resolver: 1.0.0
@@ -91,6 +90,7 @@ devDependencies:
   ts-jest: 27.0.3_jest@27.0.4+typescript@4.3.4
   tslib: 2.3.0
   typescript: 4.3.4
+  yyabuilder: link:../yyabuilder
 
 packages:
 
