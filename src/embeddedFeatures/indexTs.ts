@@ -25,6 +25,7 @@ export function inprintIndexTs(paramsObject: any, options: InprintOptions) {
     if (!paramsObject.absolutePath.endsWith("/index.ts")) return undefined;
 
     const excludes = new Set([
+        "projmeta",
         ...(paramsObject?.excludes || []),
         ...(paramsObject?.exclude || []),
         ...(paramsObject?.excluding || []),
