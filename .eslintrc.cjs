@@ -61,5 +61,7 @@ module.exports = {
         "no-debugger": keepDebug ? 0 : nonImportantError,
         "@typescript-eslint/no-non-null-asserted-optional-chain": 0,
         "sonarjs/no-one-iteration-loop": 0,
+        "@typescript-eslint/no-this-alias": 0,
+        "no-ex-assign": 0,
     },
 };

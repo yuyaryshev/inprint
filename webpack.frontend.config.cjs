@@ -3,6 +3,9 @@ const fs = require("fs");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin;
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const isDevelopment = process.env.NODE_ENV !== "production";
+const ReactRefreshTypeScript = require('react-refresh-typescript');
 
 const pathes = (() => {
     const proj = path.resolve(__dirname);
@@ -14,16 +17,12 @@ const pathes = (() => {
         root,
         proj,
         projName,
-        dist: path.resolve(proj, "dist"),
-        distCompiled: path.resolve(proj, "distCompiled", projName),
+        resources: path.resolve(proj, "resources"),
+        bundles: path.resolve(proj, "lib/bundles", projName),
     };
 })();
 
 for (let k in pathes) console.log(`pathes.${k} = ${pathes[k]}`);
-
-// Based on:
-// https://github.com/gaearon/react-hot-loader
-// https://github.com/gaearon/react-hot-loader/blob/master/examples/typescript/webpack.config.babel.js
 
 const NODE_ENV = "development";
 
@@ -40,7 +39,7 @@ let package_json;
 let manifest_json;
 
 package_json = JSON.parse(fs.readFileSync(path.resolve(pathes.root, "package.json"), { encoding: "utf-8" }));
-manifest_json = JSON.parse(fs.readFileSync(path.resolve(pathes.dist, "manifest.json"), { encoding: "utf-8" }));
+manifest_json = JSON.parse(fs.readFileSync(path.resolve(pathes.resources, "manifest.json"), { encoding: "utf-8" }));
 let tsconf = eval("(()=>(" + fs.readFileSync("tsconfig.json", "utf-8") + "))()");
 
 let moduleAliases = {};
@@ -70,7 +69,7 @@ module.exports = {
     entry: [path.resolve(pathes.proj, "src/client/indexSmall.tsx")],
     devtool: "inline-source-map",
     devServer: {
-        contentBase: "./dist",
+        contentBase: "./resources",
         hot: true,
     },
     resolve: {
@@ -88,14 +87,14 @@ module.exports = {
         },
         //        root:               path.join(pathes.proj, 'js'),
         //        modulesDirectories: ['node_modules'],
-        extensions: [".ts", ".tsx", ".js", ".jsx"],
+        extensions: ["", ".ts", ".tsx", ".js", ".jsx", ".json"],
         alias: {
-            "react-dom": "@hot-loader/react-dom",
+            //            "react-dom": "@hot-loader/react-dom",
             ...moduleAliases,
         },
     },
     output: {
-        path: pathes.distCompiled,
+        path: pathes.bundles,
         filename: "bundle.js",
     },
     module: {
@@ -126,33 +125,66 @@ module.exports = {
             {
                 test: /\.(j|t)sx?$/,
                 exclude: /node_modules/,
-                use: {
-                    loader: "babel-loader",
-                    options: {
-                        cacheDirectory: true,
-                        babelrc: false,
-                        presets: ["@babel/preset-typescript", "@babel/preset-react"],
-                        plugins: [
-                            ["@babel/plugin-proposal-decorators", { legacy: true }],
-                            "@babel/proposal-optional-chaining",
-                            ["@babel/proposal-class-properties", { legacy: true }],
-                            "@babel/proposal-object-rest-spread",
-                            "react-hot-loader/babel",
-                            [
-                                "module-resolver",
-                                {
-                                    root: ["./"],
-                                    alias: moduleAliases,
-                                },
+                use: [
+                    {
+                        loader: "babel-loader",
+                        options: {
+                            cacheDirectory: true,
+                            babelrc: false,
+                            presets: ["@babel/preset-typescript", "@babel/preset-react"],
+                            plugins: [
+                                ["@babel/plugin-proposal-decorators", { legacy: true }],
+                                "@babel/proposal-optional-chaining",
+                                ["@babel/proposal-class-properties", { legacy: true }],
+                                "@babel/proposal-object-rest-spread",
+                                [
+                                    "module-resolver",
+                                    {
+                                        root: ["./"],
+                                        alias: moduleAliases,
+                                    },
+                                ],
+                                // "@babel/transform-modules-commonjs",
                             ],
-                            // "@babel/transform-modules-commonjs",
-                        ],
+                        },
                     },
-                },
+                    {
+                        loader: require.resolve("ts-loader"),
+                        options: {
+                            transpileOnly: true,
+                            getCustomTransformers: () => ({
+                                before: isDevelopment ? [ReactRefreshTypeScript()] : [],
+                            }),
+                        },
+                    },
+                ],
             },
         ],
     },
     plugins: [
+        new webpack.NormalModuleReplacementPlugin(/.*/, function (resource) {
+            const lowerCaseRequest = resource.request.toLowerCase();
+            ////////////// DEBUG ///////////////
+            // const c1 = !lowerCaseRequest.includes("node_modules");
+            // const c2 = lowerCaseRequest.endsWith(".js");
+            // const c3 = lowerCaseRequest[0] === ".";
+            // const c4 = resource.context.startsWith(pathes.proj);
+            // const c5 = !resource.context.toLowerCase().includes("node_modules");
+            // if (lowerCaseRequest.includes("myurl"))
+            //     console.log(`CODE00000000 YYA1135`, { resource, request: resource.request, c1, c2, c3, c4, c5 });
+            ////////////////////////////////////
+
+            if (
+                !lowerCaseRequest.includes("node_modules") &&
+                lowerCaseRequest.endsWith(".js") &&
+                lowerCaseRequest[0] === "." &&
+                resource.context.startsWith(path.resolve(__dirname)) &&
+                !resource.context.toLowerCase().includes("node_modules")
+            ) {
+                resource.request = resource.request.substr(0, resource.request.length - 3) + ".ts";
+                // console.log(`CODE00000000 YYA1134`, { resource, request: resource.request });
+            }
+        }),
         new webpack.DefinePlugin({
             BROWSER: "true",
             "process.env.BROWSER": "true",
@@ -163,7 +195,8 @@ module.exports = {
         new CleanWebpackPlugin(),
         //        new webpack.NamedModulesPlugin(), // TODO REMOVED ON 2020-13-11
         new HtmlWebpackPlugin({ title: manifest_json.name }),
-        new webpack.HotModuleReplacementPlugin(),
+        isDevelopment && new webpack.HotModuleReplacementPlugin(),
+        isDevelopment && new ReactRefreshWebpackPlugin(),
     ],
     //	watchOptions : {
     //		aggregateTimeout : 300
