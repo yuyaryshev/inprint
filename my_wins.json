@@ -1,29 +1,24 @@
 {
-    "x": 0,
-    "wins": {
-        "ide": { "app": true, "cmd": "D:\\ProgsReady\\IntellijIdeaUI\\bin\\idea64.exe" },
-        "watch": {
-            "cmd": "cls && ycplmon && watch",
-            "no_run": false
-        },
-        "ycplmon": {
-            "cmd": "cls && ycplmon",
-            "no_run": true
-        },
-        "node": {
-            "cmd": "cls && ycplmon & node",
-            "no_run": true
-        }
+  "x": 0,
+  "wins": {
+    "ide": { "app": true, "cmd": "D:\\ProgsReady\\IntellijIdeaUI\\bin\\idea64.exe" },
+    "watch": {
+      "cmd": "cls && npm run precompile && npm run watch:cjs",
+      "no_run": false
     },
-    "disabled": {
-        "webstorm": {
-            "cmd": "\"C:\\Program Files\\JetBrains\\WebStorm 2019.2.4\\bin\\webstorm64.exe\"",
-            "app": true,
-            "no_run": false
-        },
-        "tsc": {
-            "cmd": "cls && ycplmon && tsc --watch",
-            "no_run": true
-        }
+    "precompile": {
+      "cmd": "cls && npm run precompile",
+      "no_run": true
     }
+  },
+  "disabled": {
+    "watch_test_cjs": {
+      "cmd": "cls && npm run watch:test:cjs",
+      "no_run": true
+    },
+    "node": {
+      "cmd": "cls && npm run precompile && node",
+      "no_run": true
+    }
+  }
 }

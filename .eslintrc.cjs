@@ -1,3 +1,4 @@
+const disableSonarjs = 1;
 const importantOnly = 0;
 const excludeDocs = 1;
 const keepDebug = 1;
@@ -8,10 +9,15 @@ const nonImportantError = !importantOnly ? 1 : 0;
 module.exports = {
     root: true,
     parser: "@typescript-eslint/parser",
-    plugins: ["@typescript-eslint", "eslint-plugin-tsdoc", "jsdoc", "eslint-plugin-import", "sonarjs"].filter((item) => typeof item === "string"),
-    extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", !importantOnly && "plugin:sonarjs/recommended", "prettier"].filter(
+    plugins: ["@typescript-eslint", "eslint-plugin-tsdoc", "jsdoc", "eslint-plugin-import", !importantOnly && !disableSonarjs && "sonarjs"].filter(
         (item) => typeof item === "string",
     ),
+    extends: [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        !importantOnly && !disableSonarjs && "plugin:sonarjs/recommended",
+        "prettier",
+    ].filter((item) => typeof item === "string"),
     rules: {
         "no-undef": 0,
         "no-prototype-builtins": 0,
@@ -50,17 +56,25 @@ module.exports = {
         //         "FunctionExpression": false
         //     }
         // }],
-        "sonarjs/cognitive-complexity": 0,
-        "sonarjs/no-redundant-jump": 0,
-        "sonarjs/no-small-switch": 0,
-        "sonarjs/no-unused-collection": nonImportantError,
-        "sonarjs/no-collapsible-if": 0,
-        "sonarjs/prefer-immediate-return": 0,
-        "sonarjs/no-duplicate-string": 0,
+        ...(!importantOnly && !disableSonarjs
+            ? {
+                  "sonarjs/cognitive-complexity": 0,
+                  "sonarjs/no-redundant-jump": 0,
+                  "sonarjs/no-small-switch": 0,
+                  "sonarjs/no-unused-collection": nonImportantError,
+                  "sonarjs/no-collapsible-if": 0,
+                  "sonarjs/prefer-immediate-return": 0,
+                  "sonarjs/no-duplicate-string": 0,
+                  "sonarjs/no-nested-switch": 0,
+                  "sonarjs/no-nested-template-literals": 0,
+                  "sonarjs/no-gratuitous-expressions": 0,
+                  "sonarjs/no-one-iteration-loop": 0,
+              }
+            : {}),
         "no-unused-labels": nonImportantError,
         "no-debugger": keepDebug ? 0 : nonImportantError,
         "@typescript-eslint/no-non-null-asserted-optional-chain": 0,
-        "sonarjs/no-one-iteration-loop": 0,
+
         "@typescript-eslint/no-this-alias": 0,
         "no-ex-assign": 0,
     },

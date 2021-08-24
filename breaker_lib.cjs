@@ -1,6 +1,17 @@
 /* USAGES CHEATSHEET
 
 // ================================================
+// Break after some point
+
+// When this point passed then breaker is enabled:
+// @ts-ignore
+BREAKER.enable();
+
+// The is where breakpoint will be fired
+// @ts-ignore
+BREAKER.enabled();
+
+// ================================================
 // Break on same value
 
 // @ts-ignore
@@ -26,12 +37,12 @@ BREAKER.log();
 
 /*
 Идеи:
-TODO Делать вот так:
+TO DO Делать вот так:
 import {BREAKER_Lib} from "../../breaker_lib";
 const BREAKER = BREAKER_Lib(__filename);
 
 Это позволит внутри BREAKER'а делать функции, которые смотрят на файл
-TODO при этом нужно сохранить глобальность самого BREAKER'а
+TO DO при этом нужно сохранить глобальность самого BREAKER'а
 
 */
 const fs = require('fs');
@@ -66,7 +77,7 @@ let breaker_map = {
             save: function BREAKER_save(v) {
                 if (pthis.prevValue === undefined) {
                     pthis.enable();
-                    pthis.prevValue = newValue;
+                    pthis.prevValue = v;
                     pthis.prevStack = getTrace();
                 }
             },

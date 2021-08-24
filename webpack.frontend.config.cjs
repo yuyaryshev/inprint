@@ -60,7 +60,7 @@ let excludedModules = [
 ];
 
 module.exports = {
-    // TODO REMOVED ON 2020-13-11
+    // REMOVED ON 2020-13-11
     // node: {
     //     fs: "empty",
     //     child_process: "empty",
@@ -193,7 +193,7 @@ module.exports = {
             //             BASE_URL:JSON.stringify(private_js ? private_js.url : 'http://localhost')
         }),
         new CleanWebpackPlugin(),
-        //        new webpack.NamedModulesPlugin(), // TODO REMOVED ON 2020-13-11
+        //        new webpack.NamedModulesPlugin(), // REMOVED ON 2020-13-11
         new HtmlWebpackPlugin({ title: manifest_json.name }),
         isDevelopment && new webpack.HotModuleReplacementPlugin(),
         isDevelopment && new ReactRefreshWebpackPlugin(),

@@ -108,7 +108,8 @@
         "@types/chai": "^4.2.19",
         "chai": "^4.3.4",
         "mocha": "^9.0.2",
-        "yyabuilder": "^1.1.4"
+        "yyabuilder": "^1.1.4",
+        "source-map-support": "^0.5.19"
     },
     "peerDependencies": {
         "prettier": "2.3.1"
