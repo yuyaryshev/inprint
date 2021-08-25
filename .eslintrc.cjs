@@ -24,6 +24,8 @@ module.exports = {
         "no-useless-escape": 0,
         "no-empty": 0,
         "no-constant-condition": 0,
+        "no-inner-declarations": 0,
+        "no-case-declarations": 0,
         "import/extensions": [
             "error",
             "ignorePackages",
