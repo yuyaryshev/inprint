@@ -64,7 +64,9 @@
         "start": "node lib/cjs/start.js",
         "clean:frontend": "echo no front-end",
         "build:frontend": "echo no front-end",
-        "watch:frontend": "echo no front-end"
+        "watch:frontend": "echo no front-end",
+        "build_lite": "npm run precompile_full && npm run clean && npm run build:esm && npm run build:cjs && npm run build:types && npm run build:docs",
+        "republish_forced": "npm run build_lite && npx version-select && yb genprojmeta && npm publish"
     },
     "devDependencies": {
         "@babel/cli": "7.14.5",
