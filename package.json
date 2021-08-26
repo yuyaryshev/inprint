@@ -106,7 +106,7 @@
         "pretty-quick": "^3.1.1",
         "tslib": "^2.3.0",
         "cross-env": "^7.0.3",
-        "modify-filepath": "^1.1.0",
+        "modify-filepath": "*",
         "@types/chai": "^4.2.19",
         "chai": "^4.3.4",
         "mocha": "^9.0.2",
