@@ -16,7 +16,7 @@ try {
 const { DEV_BYPASS_AUTH } = DEV_SETTINGS;
 
 module.exports = {
-    presets: [],
+    presets: ["@babel/preset-typescript"],
     plugins: [
         [
             "inline-replace-variables",
