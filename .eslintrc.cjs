@@ -79,5 +79,6 @@ module.exports = {
 
         "@typescript-eslint/no-this-alias": 0,
         "no-ex-assign": 0,
+        "@typescript-eslint/adjacent-overload-signatures": 0,
     },
 };
