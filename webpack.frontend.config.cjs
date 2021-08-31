@@ -1,11 +1,12 @@
+const enableHotReloadInDevServerMode = false;
 const path = require("path");
-const fs = require("fs");
+const fs = require("fs-extra");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin;
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const isDevelopment = process.env.NODE_ENV !== "production";
-const ReactRefreshTypeScript = require('react-refresh-typescript');
+const ReactRefreshTypeScript = require("react-refresh-typescript");
 
 const pathes = (() => {
     const proj = path.resolve(__dirname);
@@ -48,16 +49,7 @@ for (let k in tsconf.compilerOptions.paths) {
     moduleAliases[k] = path.resolve(pathes.root, "ts_out", v[0]);
 }
 
-let excludedModules = [
-    "fs",
-    "sql-prettier",
-    "prettier",
-    "express",
-    "socket.io",
-    "better-sqlite3",
-    "sqlite3",
-    "child_process",
-];
+let excludedModules = ["fs", "sql-prettier", "prettier", "express", "socket.io", "better-sqlite3", "sqlite3", "child_process"];
 
 module.exports = {
     // REMOVED ON 2020-13-11
@@ -66,11 +58,13 @@ module.exports = {
     //     child_process: "empty",
     // },
     mode: "development",
-    entry: [path.resolve(pathes.proj, "src/client/indexSmall.tsx")],
+    entry: [path.resolve(pathes.proj, "src/client/index.tsx")],
     devtool: "inline-source-map",
     devServer: {
-        contentBase: "./resources",
-        hot: true,
+        static: {
+            directory: path.join(__dirname, "./resources"),
+        },
+        hot: enableHotReloadInDevServerMode && true,
     },
     resolve: {
         fallback: {
@@ -153,7 +147,7 @@ module.exports = {
                         options: {
                             transpileOnly: true,
                             getCustomTransformers: () => ({
-                                before: isDevelopment ? [ReactRefreshTypeScript()] : [],
+                                before: enableHotReloadInDevServerMode && isDevelopment ? [ReactRefreshTypeScript()] : [],
                             }),
                         },
                     },
@@ -181,7 +175,7 @@ module.exports = {
                 resource.context.startsWith(path.resolve(__dirname)) &&
                 !resource.context.toLowerCase().includes("node_modules")
             ) {
-                resource.request = resource.request.substr(0, resource.request.length - 3) + ".ts";
+                resource.request = resource.request.substr(0, resource.request.length - 3); // Should not add ".ts"! it can be ".tsx"! So leave it empty and let webpack find out the real one!
                 // console.log(`CODE00000000 YYA1134`, { resource, request: resource.request });
             }
         }),
@@ -195,8 +189,8 @@ module.exports = {
         new CleanWebpackPlugin(),
         //        new webpack.NamedModulesPlugin(), // REMOVED ON 2020-13-11
         new HtmlWebpackPlugin({ title: manifest_json.name }),
-        isDevelopment && new webpack.HotModuleReplacementPlugin(),
-        isDevelopment && new ReactRefreshWebpackPlugin(),
+        ...(enableHotReloadInDevServerMode && isDevelopment && [new webpack.HotModuleReplacementPlugin()]|| []),
+        ...(enableHotReloadInDevServerMode && isDevelopment && [new ReactRefreshWebpackPlugin()]||[]),
     ],
     //	watchOptions : {
     //		aggregateTimeout : 300
