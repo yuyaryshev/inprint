@@ -39,6 +39,7 @@ module.exports = {
                 alias: aliases,
             },
         ],
+        "react-refresh/babel",
         // DON'T ADD @babel/transform-modules-commonjs here! It's added in babel.cjs.config.cjs!
     ],
 };

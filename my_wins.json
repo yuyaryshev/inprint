@@ -7,7 +7,7 @@
       "no_run": false
     },
     "dev_server": {
-      "cmd": "cls && npm run precompile && npm run dev_server",
+      "cmd": "cls && npm run dev_server",
       "no_run": false
     },
     "precompile": {
