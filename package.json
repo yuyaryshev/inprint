@@ -90,7 +90,6 @@
         "@microsoft/api-extractor": "^7.18.7",
         "sinon": "^11.1.2",
         "@types/sinon": "^10.0.2",
-        "@types/jest": "^27.0.1",
         "@typescript-eslint/eslint-plugin": "^4.30.0",
         "@typescript-eslint/parser": "^4.30.0",
         "eslint": "^7.32.0",
