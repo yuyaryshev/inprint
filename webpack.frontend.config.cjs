@@ -7,6 +7,7 @@ const CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin;
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const isDevelopment = process.env.NODE_ENV !== "production";
 const ReactRefreshTypeScript = require("react-refresh-typescript");
+const WorkerPlugin = require('worker-plugin');
 
 const pathes = (() => {
     const proj = path.resolve(__dirname);
@@ -138,6 +139,7 @@ module.exports = {
                                         alias: moduleAliases,
                                     },
                                 ],
+                                ...(enableHotReloadInDevServerMode? ["react-refresh/babel"]:[]),
                                 // "@babel/transform-modules-commonjs",
                             ],
                         },
@@ -156,6 +158,7 @@ module.exports = {
         ],
     },
     plugins: [
+        new WorkerPlugin(),
         new webpack.NormalModuleReplacementPlugin(/.*/, function (resource) {
             const lowerCaseRequest = resource.request.toLowerCase();
             ////////////// DEBUG ///////////////
@@ -189,7 +192,7 @@ module.exports = {
         new CleanWebpackPlugin(),
         //        new webpack.NamedModulesPlugin(), // REMOVED ON 2020-13-11
         new HtmlWebpackPlugin({ title: manifest_json.name }),
-        ...(enableHotReloadInDevServerMode && isDevelopment && [new webpack.HotModuleReplacementPlugin()]|| []),
+//        ...(enableHotReloadInDevServerMode && isDevelopment && [new webpack.HotModuleReplacementPlugin()]|| []),
         ...(enableHotReloadInDevServerMode && isDevelopment && [new ReactRefreshWebpackPlugin()]||[]),
     ],
     //	watchOptions : {
