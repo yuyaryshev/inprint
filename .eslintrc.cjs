@@ -9,12 +9,13 @@ const nonImportantError = !importantOnly ? 1 : 0;
 module.exports = {
     root: true,
     parser: "@typescript-eslint/parser",
-    plugins: ["@typescript-eslint", "eslint-plugin-tsdoc", "jsdoc", "eslint-plugin-import", !importantOnly && !disableSonarjs && "sonarjs"].filter(
+    plugins: ["@typescript-eslint", "eslint-plugin-tsdoc", "jsdoc", "eslint-plugin-import", "react-hooks", !importantOnly && !disableSonarjs && "sonarjs"].filter(
         (item) => typeof item === "string",
     ),
     extends: [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
+		"plugin:react-hooks/recommended",
         !importantOnly && !disableSonarjs && "plugin:sonarjs/recommended",
         "prettier",
     ].filter((item) => typeof item === "string"),
