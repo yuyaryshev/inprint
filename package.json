@@ -65,8 +65,12 @@
         "clean:frontend": "echo no front-end",
         "build:frontend": "echo no front-end",
         "watch:frontend": "echo no front-end",
-        "build_lite": "npm run precompile_full && npm run clean && npm run build:esm && npm run build:cjs && npm run build:types && npm run build:docs",
-        "republish_forced": "npm run build_lite && npx version-select && yb genprojmeta && npm publish"
+        "build_lite": "npm run precompile && npm run clean && npm run build:cjs && npm run build:types",
+        "republish_forced": "npm run build_lite && npx version-select && yb genprojmeta && npm publish",
+        "watch:test:cjs_mocha": "mocha './lib/cjs/**/*.test.js' -w",
+        "watch:test:cjs_jest": "jest --config=jest.config-cjs.cjs --passWithNoTests -w",
+        "test:cjs_jest": "npm run build:cjs && jest --config=jest.config-cjs.cjs --passWithNoTests",
+        "test:cjs_mocha": "npm run build:cjs && mocha './lib/cjs/**/*.test.js'"
     },
     "devDependencies": {
         "@babel/cli": "7.15.4",
