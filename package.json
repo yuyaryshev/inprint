@@ -38,7 +38,7 @@
         "test": " npm run test:cjs_mocha",
         "build": "npm run precompile_full && npm run clean && npm run build:esm && npm run build:cjs && npm run build:types && npm run lint && npm run test",
         "tsc": "npm run build:ts",
-        "republish": "npm run build && npx version-select && yb genprojmeta && yb dir_hash && npm publish && yb commit-tag-push",
+        "republish": "yb check-snapshot && npm run build && npx version-select && yb genprojmeta && yb dir_hash && npm publish && yb commit-tag-push",
         "precompile": "yb precompile && eslint src --fix --quiet",
         "precompile_full": "npm run precompile && prettier src --write",
         "clean:cjs": "yb clean_cjs",
